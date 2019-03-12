@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view.telas;
 
+import control.AgendaC;
 import control.AtendimentoC;
 import control.UbsC;
 import dao.PacienteDao;
@@ -17,12 +13,14 @@ import model.Atendimento;
 import model.Paciente;
 import util.Yagami;
 import view.popups.InsAgenda;
-
+import view.Main;
 /**
  * Tela de Cadastro de Atendimento
+ *
  * @author Juan Galvão
  */
 public class CadAtendimento extends javax.swing.JInternalFrame {
+
     // Variável para o contador
     protected Timer timer = new Timer();
     Agenda ag, agendaReal;
@@ -30,41 +28,40 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
     List<Paciente> listPaciente;
     PacienteDao pdao = new PacienteDao();
     int idPaciente;
-    
+
     /**
      * Creates new form CadAtendimento
      */
     public CadAtendimento() {
         initComponents();
-        setLocation(100, 100); 
+        setLocation(100, 100);
         UbsC.CONTROL.listComboBox(cmbUbs);
         Yagami.YG.setPublicObject(new Agenda());
-        
-        
+
         idPaciente = Yagami.YG.getPublicId();
         //ativarCadastro(false);
         getPaciente();
-        
+
         // Loop que atualzia a cada 50 milisegundos
-        timer.schedule( new TimerTask() {
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
-               // Garantir que o texto do campo endereço esteja correto
-               //txtAgenda.setText("0");
-               ag = (Agenda) Yagami.YG.getPublicObject();
-               txtAgenda.setText(ag.getData_ag() + " - " + ag.getHora_ag());
+                // Garantir que o texto do campo endereço esteja correto
+                //txtAgenda.setText("0");
+                ag = (Agenda) Yagami.YG.getPublicObject();
+                txtAgenda.setText(ag.getData_ag() + " - " + ag.getHora_ag());
             }
-         }, 0, 50);
-        
+        }, 0, 50);
+
     }
-    
+
     private void getPaciente() {
         //String teste = "COMPONENTES...";
         List<Paciente> pac = pdao.listar(true, idPaciente);
         txtCodigo.setText(String.valueOf(pac.get(0).getId()));
         txtNome.setText(pac.get(0).getNome());
         txtConvenio.setText(pac.get(0).getConvenio());
-        
+
     }
 
     /**
@@ -211,7 +208,7 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmbConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSalvar))
+                    .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
@@ -305,9 +302,44 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         at.setFk_ubs(cmbUbs.getSelectedIndex() + 1);
         at.setObservacoes("00");
         at.setTipo_atendimento(cmbConsulta.getSelectedItem().toString());
-        AtendimentoC.CONTROL.create(at);
-        
-        
+        if (AtendimentoC.CONTROL.create(at)) {
+            Agenda agendaObj = new Agenda();
+            agendaObj.setData_ag(at.getData_at());
+            agendaObj.setDetalhes("Má oie");
+            agendaObj.setFk_atendimento(1);
+            agendaObj.setHora_ag(at.getHorario());
+            agendaObj.setTipo(at.getTipo_atendimento());
+            if (AgendaC.CONTROL.create(agendaObj)) {
+            } else{
+                System.out.println("Vai tomar no cú!");
+            }
+        }
+
+        /*
+         agendaReal = (Agenda) Yagami.YG.getPublicObject();
+         Atendimento at = new Atendimento();
+         at.setBloco_atual(cmbBloco.getSelectedItem().toString());
+         at.setBloco_inicial(at.getBloco_atual());
+         at.setData_at(ag.getData_ag());
+         at.setHorario(ag.getHora_ag());
+         at.setFk_medico(1); // TO DO
+         //at.setFk_patendimento(pacObj.getId());
+         //at.setFk_patendimento();
+         //Integer.parseInt(txtCodigo.getText())
+         at.setFk_ubs(cmbUbs.getSelectedIndex() + 1);
+         at.setObservacoes("00");
+         at.setTipo_atendimento(cmbConsulta.getSelectedItem().toString());
+         AtendimentoC.CONTROL.create(at);
+
+         Agenda agendaObj = new Agenda();
+         agendaObj.setData_ag(at.getData_at());
+         agendaObj.setDetalhes("Teste");
+         agendaObj.setFk_atendimento(1);
+         agendaObj.setFk_consulta(1);
+         agendaObj.setHora_ag(at.getHorario());
+         agendaObj.setTipo(at.getTipo_atendimento());
+         AgendaC.CONTROL.create(ag);
+         */
     }//GEN-LAST:event_btnSalvarActionPerformed
 
 

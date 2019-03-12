@@ -16,6 +16,7 @@ import model.Paciente;
 import engine.MysqlConn;
 import java.time.LocalDateTime;
 import util.Yagami;
+import singleton.ConexaoS;
 
 /**
  * Data Access Object para a tabela e classe Paciente

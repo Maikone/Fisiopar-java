@@ -160,7 +160,7 @@ public class InsAgenda extends javax.swing.JDialog {
             String dataS = String.valueOf(q2);
             
             lblData.setText(dataS);
-            AgendaC.CONTROL.listTable(tableAgenda, "data_ag", dataS);
+            //AgendaC.CONTROL.listTable(tableAgenda, "data_ag", dataS);
             
         } catch (ParseException ex) {
             //Yagami.mensagemErro(ex);

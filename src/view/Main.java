@@ -1,12 +1,22 @@
 package view;
 
+import control.AgendaC;
+import control.UsuarioC;
 import engine.DComponent;
 import engine.DataSource;
 import java.awt.Color;
-import java.awt.Container;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
+import model.Agenda;
+import model.Usuario;
 import util.Yagami;
 import view.popups.FindTela;
 import view.telas.Menu;
@@ -18,33 +28,49 @@ import view.telas.Menu;
  * @author Juan Galvão
  */
 public class Main extends javax.swing.JFrame {
+
     public static final Main FORM = new Main();
+
     /**
      * Cria nova JFrame Main
      */
     public Main() {
         initComponents();
         setLocationRelativeTo(null);
-        desktop.setBackground(new Color(0,90,108));
+        desktop.setBackground(new Color(0, 90, 108));
         // Teste
         /*
-        Dimension d = Main.imageDesktop(img, this.Desktop, 0, 0);
-        int width = (int) d.getWidth();
-        int height = (int) d.getHeight();
-        */
-        
+         Dimension d = Main.imageDesktop(img, this.Desktop, 0, 0);
+         int width = (int) d.getWidth();
+         int height = (int) d.getHeight();
+         */
+
         // Faz a janela abrir maximizada
         setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         // Chama método que adiciona os componentes (Ícones) na tela
         adicionarComponentes();
         // Pega o nome do usuário logado e exibe (Testes)
         lblWelcome.setText("Bem-vindo " + Yagami.usuario.getNome());
-
+        //Atualiza tabela de agenda;
+        atualizaAgenda();
+        atualizaTime();
     }
 
-    
+    public void atualizaTime() {
+        Timer timer = new Timer();
+        final long SEGUNDOS = (1000 * 5);
+        TimerTask tarefa = new TimerTask() {
+            @Override
+            public void run() {
+                atualizaAgenda();
+            }
+        };
+        timer.scheduleAtFixedRate(tarefa, 0, SEGUNDOS);
+    }
+
     /**
      * Método para verificar o nivel de acesso do usuário cadastrado;
+     *
      * @author Pedro Zampiroli
      */
     private void adicionarComponentes() {
@@ -86,6 +112,25 @@ public class Main extends javax.swing.JFrame {
         }
     }
 
+    public void atualizaAgenda() {
+        try {
+            Date dataHoraAtual = new Date();
+            String data = new SimpleDateFormat("dd/MM/yyyy").format(dataHoraAtual);
+            Date dataConv;
+            dataConv = Yagami.stringToDate(data);
+            AgendaC.CONTROL.listarPorData(tblAgenda, dataConv);
+            // Se encontrar algum valor...
+            if (tblAgenda.getRowCount() > 0) {
+                // Selecionar a primeira linha
+                tblAgenda.setRowSelectionInterval(0, 0);
+            }
+            System.out.println("Atualizada!");
+        } catch (ParseException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -99,7 +144,7 @@ public class Main extends javax.swing.JFrame {
         panelAgenda = new javax.swing.JPanel();
         lblWelcome = new javax.swing.JLabel();
         scrollPane = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblAgenda = new javax.swing.JTable();
         panelBar = new javax.swing.JPanel();
         btnMenu = new javax.swing.JButton();
         lblSair = new javax.swing.JLabel();
@@ -128,7 +173,7 @@ public class Main extends javax.swing.JFrame {
         lblWelcome.setText("Bem-Vindo");
         lblWelcome.setToolTipText("Teste");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblAgenda.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -139,7 +184,7 @@ public class Main extends javax.swing.JFrame {
                 "Data", "Exame", "Paciente", "Médico"
             }
         ));
-        scrollPane.setViewportView(jTable1);
+        scrollPane.setViewportView(tblAgenda);
 
         javax.swing.GroupLayout panelAgendaLayout = new javax.swing.GroupLayout(panelAgenda);
         panelAgenda.setLayout(panelAgendaLayout);
@@ -300,19 +345,19 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
         Menu pTeste = new Menu();
         /*
-        pTeste.setBounds(0, 100, 439, 491);
-        //pTeste.setLocation(50, 50);
-        pTeste.setVisible(true);
-        pTeste.requestFocus();
-        desktop.add(pTeste);
-        */
+         pTeste.setBounds(0, 100, 439, 491);
+         //pTeste.setLocation(50, 50);
+         pTeste.setVisible(true);
+         pTeste.requestFocus();
+         desktop.add(pTeste);
+         */
         Yagami.exibirTela(pTeste, desktop, false);
-        
+
     }//GEN-LAST:event_btnMenuActionPerformed
 
     private void desktopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_desktopMouseClicked
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_desktopMouseClicked
 
     private void menuAbrirTelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAbrirTelaActionPerformed
@@ -339,7 +384,6 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_lblSair1MouseReleased
 
-    
     /**
      * Método main da classe Main
      *
@@ -379,7 +423,6 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnMenu;
     public static javax.swing.JDesktopPane desktop;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblSair;
     private javax.swing.JLabel lblSair1;
     private javax.swing.JLabel lblWelcome;
@@ -390,5 +433,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel panelAgenda;
     private javax.swing.JPanel panelBar;
     private javax.swing.JScrollPane scrollPane;
+    private javax.swing.JTable tblAgenda;
     // End of variables declaration//GEN-END:variables
 }

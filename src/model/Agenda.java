@@ -14,6 +14,7 @@ public class Agenda {
     private int fk_atendimento;
     private int fk_consulta;
     private String detalhes;
+    private String nomePaciente;
 
     public int getId_agenda() {
         return id_agenda;
@@ -71,9 +72,17 @@ public class Agenda {
         this.detalhes = detalhes;
     }
 
+    public String getNomePaciente() {
+        return nomePaciente;
+    }
+
+    public void setNomePaciente(String nomePaciente) {
+        this.nomePaciente = nomePaciente;
+    } 
+   
     public Agenda() { }
 
-    public Agenda(int id_agenda, Date data_ag, Time hora_ag, String tipo, int fk_atendimento, int fk_consulta, String detalhes) {
+    public Agenda(int id_agenda, Date data_ag, Time hora_ag, String tipo, int fk_atendimento, int fk_consulta, String detalhes, String nomePaciente) {
         this.id_agenda = id_agenda;
         this.data_ag = data_ag;
         this.hora_ag = hora_ag;
@@ -81,6 +90,7 @@ public class Agenda {
         this.fk_atendimento = fk_atendimento;
         this.fk_consulta = fk_consulta;
         this.detalhes = detalhes;
+        this.nomePaciente = nomePaciente;
     }
     
     

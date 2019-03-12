@@ -9,16 +9,9 @@ import java.sql.SQLException;
  * @author Juan Galvão
  */
 public class MysqlConn {
-    //Nome do usuário do mysql
     private static final String USERNAME = "root";
-
-    //Senha do mysql
     private static final String PASSWORD = "";
-
-    //Dados de caminho, porta e nome da base de dados que irá ser feita a conexão
     private static final String DATABASE_URL = "jdbc:mysql://127.0.0.1:3306/db_fisiobase";
-
-    // Objeto de Conexão
     private static Connection connection;
     
     /**
