@@ -82,9 +82,16 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         String numFK = Integer.toString(pAtendimento);
 
         int statusAtendimento = 0;
-
+        int tipoSessao = 0;
+        //pesquisa com a  fk pre atendimento
         for (Atendimento stats : AtendimentoC.CONTROL.read(true, numFK)) {
             statusAtendimento = stats.getStatus();
+
+        }
+        //pesquisa com a  fk pre atendimento para verificar é maior q 1   "sessao <= 0 == consulta"
+        for (Atendimento stats : AtendimentoC.CONTROL.read(true, "1")) {
+            tipoSessao = stats.getStatus();
+            System.out.println("status do di 1.......................:" + stats.getNum_sessao());
         }
 
         for (Atendimento atend : AtendimentoC.CONTROL.read(false, null)) {
@@ -92,19 +99,24 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                 contPatend++;
             }
         }
-        
-        if (contPatend >= 10 /*| statusAtendimento ==  ou se o paciente atual estiver finalizado */) {
-                        
-            btnSalvar.setEnabled(false);
-            btnSalvar.setBackground(Color.red);
-            btnSalvar.setText("FINALIZADO");
-            btnFinalizar.setVisible(false);
+
+        if (tipoSessao != 0) {
+
+            if (statusAtendimento == 1 || contPatend >= 10 /* ou se o paciente atual estiver finalizado */) {
+
+                btnSalvar.setEnabled(false);
+                btnSalvar.setBackground(Color.red);
+                btnSalvar.setText("FINALIZADO");
+                btnFinalizar.setVisible(false);
+            }
+
         }
 
-        
         System.out.println("quantidade de sessoes referente ao id do pré atedimento 3...:" + statusAtendimento);
         System.out.println("metodo iniciado");
         System.out.println("quantidade total de um unico paciente : " + contPatend);
+        
+         
 
     }
 
@@ -463,7 +475,12 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+private void finaliza() {
+        Atendimento att = new Atendimento();
+        att.setFk_patendimento(pAtendimento);
+        att.setStatus(1);
+        AtendimentoC.CONTROL.update(att);
+    }
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         // TODO add your handling code here:
@@ -475,7 +492,7 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         at.setData_at(ag.getData_ag());
         at.setHorario(ag.getHora_ag());
         at.setFk_medico(1); // TO DO
-        at.setFk_patendimento(3); // TO DO
+        at.setFk_patendimento(pAtendimento); // TO DO
         at.setFk_ubs(cmbUbs.getSelectedIndex() + 1);
         at.setObservacoes(txtObservacao.getText());
         at.setTipo_atendimento(cmbConsulta.getSelectedItem().toString());
@@ -505,21 +522,26 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                 System.out.println("Vai tomar no cú!");
             }
         }
-        pAtendimento = 0;
-        status();
-        
+
         if (contPatend >= 9 /*| statusAtendimento ==  ou se o paciente atual estiver finalizado */) {
 
-                        
+            finaliza();
             btnSalvar.setEnabled(false);
             btnSalvar.setBackground(Color.red);
             btnSalvar.setText("FINALIZADO");
             btnFinalizar.setVisible(false);
+
+           try {
+                Thread.sleep(500);
+                System.out.println("testando tenmpo fefewfewf");
+                pAtendimento = 0;
+                status();
+
+            } catch (Exception e) {
+            }
+
             
-            Atendimento att = new Atendimento();
-            att.setFk_patendimento(pAtendimento);
-            att.setStatus(1);
-            AtendimentoC.CONTROL.update(att);
+            
         }
 
         /*
@@ -609,10 +631,9 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
 
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
         // TODO add your handling code here:
-        Atendimento at = new Atendimento();
-        at.setFk_patendimento(pAtendimento);
-        at.setStatus(1);
-        AtendimentoC.CONTROL.update(at);
+
+        finaliza();
+
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
 
