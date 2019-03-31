@@ -532,8 +532,7 @@ private void finaliza() {
             btnFinalizar.setVisible(false);
 
            try {
-                Thread.sleep(500);
-                System.out.println("testando tenmpo fefewfewf");
+                Thread.sleep(500);                
                 pAtendimento = 0;
                 status();
 
