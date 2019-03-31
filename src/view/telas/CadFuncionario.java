@@ -158,7 +158,7 @@ public class CadFuncionario extends javax.swing.JInternalFrame {
         setTitle("CADFUN");
         setToolTipText("Cadastra Funcionarios");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/img/iconPacientes.png"))); // NOI18N
-        setName("FUN00X"); // NOI18N
+        setName("+Funcionário"); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }

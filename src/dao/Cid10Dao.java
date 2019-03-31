@@ -12,15 +12,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.management.Query;
-import javax.naming.spi.DirStateFactory.Result;
+
 import javax.swing.JOptionPane;
 import model.Cid10;
-import model.Paciente;
 import util.Yagami;
-import view.telas.FiltrarCid10;
 
 /**
  *
@@ -28,10 +23,10 @@ import view.telas.FiltrarCid10;
  */
 public class Cid10Dao {
     
-    public List<Cid10> listar() {
+   public List<Cid10> listar() {
         String sql = "SELECT * FROM cid10";
 
-        List<Cid10> cid10 = new ArrayList<>();
+        List<Cid10> cid10p = new ArrayList<>();
 
         Connection conn = null;
         PreparedStatement pstm = null;
@@ -46,14 +41,15 @@ public class Cid10Dao {
 
             //Enquanto existir dados no banco de dados, faça
             while (rset.next()) {
-                Cid10 cids10 = new Cid10();
+                Cid10 cid10 = new Cid10();
 
                 //Recupera o id do banco e atribui ele ao objeto
-                
-                cids10.setNome(rset.getString("nome"));
+               
+                cid10.setIdCid("idCid");
+                cid10.setDescricaocid("descricaoCid");
                 
                 //Adiciono o contato recuperado, a lista de contatos
-                cid10.add(cids10);
+                cid10p.add(cid10);
             }
             
         } catch (Exception e) {
@@ -75,18 +71,19 @@ public class Cid10Dao {
                 }
 
             } catch (SQLException e) {
-                //e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Erro inexesperado.\n" + e, "Erro", JOptionPane.ERROR_MESSAGE);
+                Yagami.mensagemErro(e);
             }
         }
 
-        return cid10;
+        return cid10p;
     }
-    
-   public List<Cid10> listarLike(String cid) {
-        String sql = "SELECT * FROM cid10 WHERE nome LIKE '%"+ cid + "%'";
 
-        List<Cid10> cid10 = new ArrayList<>();
+   public List<Cid10> listarCid10Where(String idCid,String descricaoCid) {
+        String sql = "SELECT idCid, descricaoCid\n" +
+                     "FROM cid10\n" +                     
+                     "WHERE idCid LIKE " + "'%"+ idCid +"%'" + "OR descricaoCid LIKE" + "'%"+ descricaoCid + "%'" ;
+        
+        List<Cid10> cid10l = new ArrayList<>();
 
         Connection conn = null;
         PreparedStatement pstm = null;
@@ -101,18 +98,19 @@ public class Cid10Dao {
 
             //Enquanto existir dados no banco de dados, faça
             while (rset.next()) {
-                Cid10 cids10 = new Cid10();
+                Cid10 cid10 = new Cid10();
 
                 //Recupera o id do banco e atribui ele ao objeto
-                cids10.setNome(rset.getString("nome"));
+                cid10.setIdCid(rset.getString("idCid"));
+                cid10.setDescricaocid(rset.getString("descricaoCid"));
+                
                 
                 //Adiciono o contato recuperado, a lista de contatos
-                cid10.add(cids10);
+                cid10l.add(cid10);
             }
             
         } catch (Exception e) {
-            //e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erro inexesperado.\n" + e, "Erro", JOptionPane.ERROR_MESSAGE);
+            Yagami.mensagemErro(e);
             
         } finally {
             try {
@@ -129,13 +127,10 @@ public class Cid10Dao {
                 }
 
             } catch (SQLException e) {
-                //e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Erro inexesperado.\n" + e, "Erro", JOptionPane.ERROR_MESSAGE);
+                Yagami.mensagemErro(e);
             }
         }
 
-        return cid10;
+        return cid10l;
     }
-     
-    
 }

@@ -18,6 +18,8 @@ public class Atendimento {
     private String observacoes;
     private int fk_patendimento;
     private int fk_ubs;
+    private String fk_cid10;
+    private int num_sessao;
 
     public int getId_atendimento() {
         return id_atendimento;
@@ -98,6 +100,24 @@ public class Atendimento {
     public void setFk_ubs(int fk_ubs) {
         this.fk_ubs = fk_ubs;
     }
-    
+
+    public String getFk_cid10() {
+        return fk_cid10;
+    }
+
+    public void setFk_cid10(String fk_cid10) {
+        this.fk_cid10 = fk_cid10;
+    }
+
+    public int getNum_sessao() {
+        return num_sessao;
+    }
+
+    public void setNum_sessao(int num_sessao) {
+        this.num_sessao = num_sessao;
+    }
+
+   
+
     
 }

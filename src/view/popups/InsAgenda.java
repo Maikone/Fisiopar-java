@@ -78,6 +78,11 @@ public class InsAgenda extends javax.swing.JDialog {
                 txtDataFocusLost(evt);
             }
         });
+        txtData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDataActionPerformed(evt);
+            }
+        });
 
         try {
             txtHora.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
@@ -160,7 +165,7 @@ public class InsAgenda extends javax.swing.JDialog {
             String dataS = String.valueOf(q2);
             
             lblData.setText(dataS);
-            //AgendaC.CONTROL.listTable(tableAgenda, "data_ag", dataS);
+            AgendaC.CONTROL.listarPorData(tableAgenda, q2);
             
         } catch (ParseException ex) {
             //Yagami.mensagemErro(ex);
@@ -183,6 +188,10 @@ public class InsAgenda extends javax.swing.JDialog {
             Yagami.mensagemErro(ex);
         }
     }//GEN-LAST:event_btnMarcarActionPerformed
+
+    private void txtDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDataActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDataActionPerformed
 
     /**
      * @param args the command line arguments

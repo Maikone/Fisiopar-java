@@ -62,6 +62,8 @@ public class AtendimentoDao {
                 atendimento.setObservacoes(rset.getString("observacoes"));
                 atendimento.setFk_patendimento(rset.getInt("fk_patendimento"));
                 atendimento.setFk_ubs(rset.getInt("fk_ubs"));
+                atendimento.setFk_cid10(rset.getString("fk_cid10"));
+                atendimento.setNum_sessao(rset.getInt("num_sessao"));
                 
                 //....
                 
@@ -95,6 +97,69 @@ public class AtendimentoDao {
 
         return atendimentos;
     }
+    
+    // CUSTOM
+    public List<Atendimento> listarCustom(String sql) {
+        List<Atendimento> atendimentos = new ArrayList<>();
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+
+        //Classe que vai recuperar os dados do banco de dados
+        ResultSet rset = null;
+
+        try {
+            conn = MysqlConn.createConnectionToMySQL();
+            pstm = conn.prepareStatement(sql);
+            rset = pstm.executeQuery();
+
+            //Enquanto existir dados no banco de dados, faça
+            while (rset.next()) {
+                Atendimento atendimento = new Atendimento();
+
+                //Recupera o id do banco e atribui ele ao objeto
+                atendimento.setId_atendimento(rset.getInt("id_atendimento"));
+                atendimento.setTipo_atendimento(rset.getString("tipo_atendimento"));
+                atendimento.setFk_medico(rset.getInt("fk_medico"));
+                atendimento.setBloco_inicial(rset.getString("bloco_inicial"));
+                atendimento.setBloco_atual(rset.getString("bloco_atual"));
+                atendimento.setHorario(rset.getTime("horario"));
+                atendimento.setData_at(rset.getDate("data_at"));
+                atendimento.setObservacoes(rset.getString("observacoes"));
+                atendimento.setFk_patendimento(rset.getInt("fk_patendimento"));
+                atendimento.setFk_ubs(rset.getInt("fk_ubs"));
+                atendimento.setFk_cid10(rset.getString("fk_cid10"));
+                atendimento.setNum_sessao(rset.getInt("num_sessao"));
+                //....
+                
+                //Adiciono o contato recuperado, a lista de contatos
+                atendimentos.add(atendimento);
+            }
+            
+        } catch (Exception e) {
+            Yagami.mensagemErro(e);
+            
+        } finally {
+            try {
+                if (rset != null) {
+                    rset.close();
+                }
+
+                if (pstm != null) {
+                    pstm.close();
+                }
+
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (SQLException e) {
+                Yagami.mensagemErro(e);
+            }
+        }
+
+        return atendimentos;
+    }
 
     public boolean salvar(Atendimento atendimento) {
         boolean retorno = true;
@@ -105,8 +170,8 @@ public class AtendimentoDao {
         String sql = "INSERT INTO atendimento\n" +
         "(tipo_atendimento, fk_medico,\n" +
         "bloco_inicial, bloco_atual, horario, data_at,\n" +
-        "observacoes, fk_patendimento, fk_ubs)\n" +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        "observacoes, fk_patendimento, fk_ubs, fk_cid10, num_sessao)\n" +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         Connection conn = null;
         PreparedStatement pstm = null;
@@ -128,6 +193,8 @@ public class AtendimentoDao {
             pstm.setString(7,  atendimento.getObservacoes());
             pstm.setInt   (8,  atendimento.getFk_patendimento());
             pstm.setInt   (9,  atendimento.getFk_ubs());
+            pstm.setString(10,  atendimento.getFk_cid10());
+            pstm.setInt   (11,  atendimento.getNum_sessao());
 
             //Executa a sql para inserção dos dados
             pstm.execute();

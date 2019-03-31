@@ -10,7 +10,7 @@ import java.sql.SQLException;
  */
 public class MysqlConn {
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "1043";
     private static final String DATABASE_URL = "jdbc:mysql://127.0.0.1:3306/db_fisiobase";
     private static Connection connection;
     

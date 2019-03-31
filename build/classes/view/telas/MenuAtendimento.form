@@ -29,9 +29,9 @@
     <Property name="title" type="java.lang.String" value="Agendar"/>
     <Property name="toolTipText" type="java.lang.String" value="Tela para agendar atendimento"/>
     <Property name="frameIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-      <Image iconType="3" name="/img/iconAgenda.png"/>
+      <Image iconType="3" name="/img/iconAgenda (2).png"/>
     </Property>
-    <Property name="name" type="java.lang.String" value="AGE001" noResource="true"/>
+    <Property name="name" type="java.lang.String" value="Agenda" noResource="true"/>
     <Property name="visible" type="boolean" value="true"/>
   </Properties>
   <SyntheticProperties>

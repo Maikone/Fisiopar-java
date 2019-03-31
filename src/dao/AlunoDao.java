@@ -113,7 +113,7 @@ public class AlunoDao {
         "etnia, nome_resp, nome_mae, tel_prim,\n" +
         "tel_sec, email, fk_endereco, ra, curso, coordenador)\n" +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,\n" +
-        "?, ?, ?, ?, ?)";
+        "?, ?, ?, ?)";
 
         Connection conn = null;
         PreparedStatement pstm = null;

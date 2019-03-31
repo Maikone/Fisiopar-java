@@ -35,9 +35,9 @@
     <Property name="title" type="java.lang.String" value="+Paciente"/>
     <Property name="toolTipText" type="java.lang.String" value="Tela para cadastro de paciente"/>
     <Property name="frameIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-      <Image iconType="3" name="/img/iconTestePurple.png"/>
+      <Image iconType="3" name="/img/iconPlus2.png"/>
     </Property>
-    <Property name="name" type="java.lang.String" value="PAC001" noResource="true"/>
+    <Property name="name" type="java.lang.String" value="+Paciente" noResource="true"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="menuBar"/>

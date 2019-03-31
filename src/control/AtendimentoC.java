@@ -36,8 +36,26 @@ public class AtendimentoC {
      */
     
     public List<Atendimento> read() {
+         String sql;
         List<Atendimento> atendimentos;
         atendimentos = ateDao.listar(false); 
+        
+       /* for (Atendimento atend : atendimentos) {
+            System.out.println("atend control   :" + atend.getFk_patendimento());
+            atend.getNum_sessao();
+            
+            
+            
+        }
+       if(like) {
+            sql = "SELECT * FROM atendimento WHERE nome LIKE '%" + param + "%'";
+            atendimentos = ateDao.listarCustom(sql);
+        } else {
+            sql = "SELECT * FROM atendimento";
+            atendimentos = ateDao.listarCustom(sql);
+        }
+        */
+        
         return atendimentos;
     }
     

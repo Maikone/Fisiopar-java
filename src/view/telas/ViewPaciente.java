@@ -66,8 +66,8 @@ public class ViewPaciente extends javax.swing.JInternalFrame {
         setIconifiable(true);
         setTitle("Pacientes");
         setToolTipText("Tela para vizualização de Pacientes");
-        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/img/iconPacientes.png"))); // NOI18N
-        setName("PAC002"); // NOI18N
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/img/iconCadUsuario.png"))); // NOI18N
+        setName("Pacientes"); // NOI18N
         setVisible(true);
 
         tablePaciente.setModel(new javax.swing.table.DefaultTableModel(

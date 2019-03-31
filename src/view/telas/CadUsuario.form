@@ -10,9 +10,9 @@
     <Property name="title" type="java.lang.String" value="Cadastro de Usu&#xe1;rio"/>
     <Property name="toolTipText" type="java.lang.String" value="Tela para cadastro de usu&#xe1;rio"/>
     <Property name="frameIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-      <Image iconType="3" name="/img/iconTesteBlue.png"/>
+      <Image iconType="3" name="/img/iconPlus2.png"/>
     </Property>
-    <Property name="name" type="java.lang.String" value="USU001" noResource="true"/>
+    <Property name="name" type="java.lang.String" value="+usu&#xe1;rio" noResource="true"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>

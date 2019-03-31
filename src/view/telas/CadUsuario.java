@@ -43,8 +43,8 @@ public class CadUsuario extends javax.swing.JInternalFrame {
         setClosable(true);
         setTitle("Cadastro de Usuário");
         setToolTipText("Tela para cadastro de usuário");
-        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/img/iconTesteBlue.png"))); // NOI18N
-        setName("USU001"); // NOI18N
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/img/iconPlus2.png"))); // NOI18N
+        setName("+usuário"); // NOI18N
 
         txtNome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

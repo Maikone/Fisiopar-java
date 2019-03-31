@@ -155,8 +155,8 @@ public class CadPaciente extends javax.swing.JInternalFrame {
         setMaximizable(true);
         setTitle("+Paciente");
         setToolTipText("Tela para cadastro de paciente");
-        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/img/iconTestePurple.png"))); // NOI18N
-        setName("PAC001"); // NOI18N
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/img/iconPlus2.png"))); // NOI18N
+        setName("+Paciente"); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
@@ -176,7 +176,7 @@ public class CadPaciente extends javax.swing.JInternalFrame {
         });
 
         panelCadastro.setBackground(new java.awt.Color(237, 241, 244));
-        panelCadastro.setBorder(javax.swing.BorderFactory.createBevelBorder(0));
+        panelCadastro.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         try {
             txtDatanas.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));

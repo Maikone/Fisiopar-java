@@ -10,22 +10,31 @@ package model;
  * @author david
  */
 public class Cid10 {
-    private String nome;
 
-   
+    private String idCid;
+    private String descricaocid;
 
-    public String getNome() {
-        return nome;
+    public String getIdCid() {
+        return idCid;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setIdCid(String idCid) {
+        this.idCid = idCid;
     }
+
+    public String getDescricaocid() {
+        return descricaocid;
+    }
+
+    public void setDescricaocid(String descricaocid) {
+        this.descricaocid = descricaocid;
+    }
+    
+  
+
+    
     
     public Cid10() { }
     
-    public Cid10(String nome){
-        this.nome = nome;
-    }
-    
+
 }

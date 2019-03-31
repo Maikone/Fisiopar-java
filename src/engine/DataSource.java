@@ -98,8 +98,8 @@ public class DataSource {
         new CadPaciente(),
         new CadUsuario(),
         new ViewPaciente(),
-        new MenuAtendimento(),
-        new FiltrarCid10()
+        new MenuAtendimento()
+        
         
         
     };
@@ -152,8 +152,8 @@ public class DataSource {
         new DComponent(10, 258, new CadPaciente()),
         new DComponent(10, 338, new CadAluno()),
         new DComponent(10, 418, new CadFisioterapeuta()),
-        new DComponent(10, 498, new CadFuncionario()),
-        new DComponent(10, 578, new FiltrarCid10())
+        new DComponent(10, 498, new CadFuncionario())
+        
         
     };
     

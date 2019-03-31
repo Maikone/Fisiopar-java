@@ -63,8 +63,8 @@ public class MenuAtendimento extends javax.swing.JInternalFrame {
         setClosable(true);
         setTitle("Agendar");
         setToolTipText("Tela para agendar atendimento");
-        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/img/iconAgenda.png"))); // NOI18N
-        setName("AGE001"); // NOI18N
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/img/iconAgenda (2).png"))); // NOI18N
+        setName("Agenda"); // NOI18N
         setVisible(true);
 
         panelPacientes.setBackground(new java.awt.Color(243, 243, 243));
