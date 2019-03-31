@@ -13,13 +13,16 @@ import model.Atendimento;
 import model.Paciente;
 import util.Yagami;
 import view.popups.InsAgenda;
-import view.Main;
+import view.popups.FindCid10;
+
 /**
  * Tela de Cadastro de Atendimento
  *
  * @author Juan Galvão
  */
 public class CadAtendimento extends javax.swing.JInternalFrame {
+
+    protected FindCid10 ci = new FindCid10(null, true);
 
     // Variável para o contador
     protected Timer timer = new Timer();
@@ -50,6 +53,8 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                 //txtAgenda.setText("0");
                 ag = (Agenda) Yagami.YG.getPublicObject();
                 txtAgenda.setText(ag.getData_ag() + " - " + ag.getHora_ag());
+                txtCid10.setText(String.valueOf(ci.idCid));
+
             }
         }, 0, 50);
 
@@ -61,6 +66,8 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         txtCodigo.setText(String.valueOf(pac.get(0).getId()));
         txtNome.setText(pac.get(0).getNome());
         txtConvenio.setText(pac.get(0).getConvenio());
+        txtCns.setText(pac.get(0).getCns());
+        txtObservacao.setText(pac.get(0).getObservacoes());
 
     }
 
@@ -80,8 +87,7 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         txtConvenio = new javax.swing.JTextField();
         txtAgenda = new javax.swing.JTextField();
         cmbUbs = new javax.swing.JComboBox();
-        cmbConsulta = new javax.swing.JComboBox();
-        btnSalvar = new javax.swing.JButton();
+        cmbtpAtendimento = new javax.swing.JComboBox();
         lblProtocolo = new javax.swing.JLabel();
         lblNome = new javax.swing.JLabel();
         lblCodigo = new javax.swing.JLabel();
@@ -90,6 +96,16 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         lblAgenda = new javax.swing.JLabel();
         lblUbs = new javax.swing.JLabel();
         lblTipoConsulta = new javax.swing.JLabel();
+        txtCid10 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        txtCns = new javax.swing.JFormattedTextField();
+        btnSalvar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtObservacao = new javax.swing.JTextArea();
+        jLabel6 = new javax.swing.JLabel();
+        cmbConsulta = new javax.swing.JComboBox();
+        jLabel7 = new javax.swing.JLabel();
         lblTitle = new javax.swing.JLabel();
         panelComandos = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -107,6 +123,11 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         txtNome.setEditable(false);
 
         txtCodigo.setEditable(false);
+        txtCodigo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtCodigoFocusGained(evt);
+            }
+        });
 
         cmbBloco.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Bloco 1", "Bloco 2", "Bloco 3" }));
 
@@ -118,15 +139,18 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                 txtAgendaFocusGained(evt);
             }
         });
+        txtAgenda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAgendaActionPerformed(evt);
+            }
+        });
 
         cmbUbs.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "UBS" }));
 
-        cmbConsulta.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ortopedia", "Cardiologia", "Pneumo", "Ginecologista", "Pediatria", "Neurologia" }));
-
-        btnSalvar.setText("Salvar");
-        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+        cmbtpAtendimento.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Consulta", "Sessão" }));
+        cmbtpAtendimento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalvarActionPerformed(evt);
+                cmbtpAtendimentoActionPerformed(evt);
             }
         });
 
@@ -144,40 +168,116 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
 
         lblUbs.setText("UBS:");
 
-        lblTipoConsulta.setText("Tipo de Consulta:");
+        lblTipoConsulta.setText("Tipo de Atendimento:");
+
+        txtCid10.setBackground(new java.awt.Color(204, 204, 255));
+        txtCid10.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtCid10FocusGained(evt);
+            }
+        });
+        txtCid10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCid10ActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Cid10:");
+
+        jLabel5.setText("CNS:");
+
+        try {
+            txtCns.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.####.####.####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txtCns.setVerifyInputWhenFocusTarget(false);
+        txtCns.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtCnsFocusGained(evt);
+            }
+        });
+        txtCns.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCnsActionPerformed(evt);
+            }
+        });
+
+        btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
+
+        txtObservacao.setColumns(20);
+        txtObservacao.setRows(5);
+        jScrollPane1.setViewportView(txtObservacao);
+
+        jLabel6.setText("Observação:");
+
+        cmbConsulta.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ortopedia", "Cardiologia", "Pneumo", "Ginecologia" }));
+        cmbConsulta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbConsultaActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("Tipo de Consulta:");
 
         javax.swing.GroupLayout panelFormLayout = new javax.swing.GroupLayout(panelForm);
         panelForm.setLayout(panelFormLayout);
         panelFormLayout.setHorizontalGroup(
             panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFormLayout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblTipoConsulta)
-                    .addComponent(lblAgenda)
-                    .addComponent(lblNome)
-                    .addComponent(lblBloco)
-                    .addComponent(txtNome)
-                    .addComponent(cmbBloco, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtAgenda)
-                    .addComponent(cmbConsulta, 0, 190, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addGap(57, 57, 57)
                 .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblProtocolo)
-                    .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(lblCodigo)
-                        .addComponent(txtCodigo)
-                        .addComponent(txtConvenio)
-                        .addComponent(btnSalvar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cmbUbs, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblUbs)
-                    .addComponent(lblConvenio))
-                .addContainerGap(60, Short.MAX_VALUE))
+                    .addGroup(panelFormLayout.createSequentialGroup()
+                        .addComponent(lblProtocolo)
+                        .addContainerGap())
+                    .addGroup(panelFormLayout.createSequentialGroup()
+                        .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtCid10)
+                                .addComponent(jLabel4)
+                                .addComponent(lblAgenda)
+                                .addComponent(lblNome)
+                                .addComponent(lblBloco)
+                                .addComponent(txtNome)
+                                .addComponent(cmbBloco, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtAgenda)
+                                .addComponent(jLabel6)
+                                .addComponent(jScrollPane1)
+                                .addComponent(cmbConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel7))
+                        .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelFormLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblTipoConsulta)
+                                    .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(txtCns, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(lblCodigo)
+                                                .addComponent(txtCodigo)
+                                                .addComponent(txtConvenio)
+                                                .addComponent(cmbUbs, 0, 190, Short.MAX_VALUE)
+                                                .addComponent(lblUbs)
+                                                .addComponent(lblConvenio))
+                                            .addComponent(jLabel5))
+                                        .addComponent(cmbtpAtendimento, javax.swing.GroupLayout.Alignment.LEADING, 0, 190, Short.MAX_VALUE)))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(39, 39, 39))))))
         );
         panelFormLayout.setVerticalGroup(
             panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFormLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addComponent(lblProtocolo)
+                .addGap(16, 16, 16)
                 .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNome)
                     .addComponent(lblCodigo))
@@ -203,13 +303,30 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                     .addComponent(cmbUbs, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTipoConsulta)
-                    .addComponent(lblProtocolo))
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(30, Short.MAX_VALUE))
+                    .addComponent(txtCns, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(lblTipoConsulta))
+                .addGap(4, 4, 4)
+                .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCid10, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbtpAtendimento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFormLayout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormLayout.createSequentialGroup()
+                        .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         lblTitle.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
@@ -234,12 +351,12 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                 .addGroup(panelComandosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelComandosLayout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 45, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(panelComandosLayout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel3)))
-                .addGap(12, 12, 12))
+                .addContainerGap())
         );
         panelComandosLayout.setVerticalGroup(
             panelComandosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -250,7 +367,7 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                 .addGroup(panelComandosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(258, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -258,41 +375,41 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(21, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitle)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(panelForm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(25, 25, 25)
-                        .addComponent(panelComandos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(panelForm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(panelComandos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(lblTitle)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(lblTitle)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelComandos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelForm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(panelForm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(57, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(panelComandos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtAgendaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAgendaFocusGained
-        // TODO add your handling code here:
-        txtCodigo.requestFocus();
-        new InsAgenda(null, true).setVisible(true);
-        txtCodigo.requestFocus();
-    }//GEN-LAST:event_txtAgendaFocusGained
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         // TODO add your handling code here:
         agendaReal = (Agenda) Yagami.YG.getPublicObject();
         Atendimento at = new Atendimento();
+        Atendimento a = new Atendimento();
         at.setBloco_atual(cmbBloco.getSelectedItem().toString());
         at.setBloco_inicial(at.getBloco_atual());
         at.setData_at(ag.getData_ag());
@@ -302,6 +419,32 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         at.setFk_ubs(cmbUbs.getSelectedIndex() + 1);
         at.setObservacoes("00");
         at.setTipo_atendimento(cmbConsulta.getSelectedItem().toString());
+        at.setObservacoes(txtObservacao.getText());
+        at.setFk_cid10(ci.idCid);
+        
+        int n = 3;
+        int j = 0;
+        
+        if (cmbtpAtendimento.getSelectedIndex() == 1) {
+
+            for (Atendimento atend : AtendimentoC.CONTROL.read()) {
+                if (atend.getFk_patendimento() == n) {
+                    j++;
+                }
+            }
+           
+            at.setNum_sessao(j);
+        
+            
+
+        } else if ( AtendimentoC.CONTROL.read().get(n).getNum_sessao() == 1) {
+            
+        }
+{
+            System.out.println("tt");
+            // set consulta
+        }
+
         if (AtendimentoC.CONTROL.create(at)) {
             Agenda agendaObj = new Agenda();
             agendaObj.setData_ag(at.getData_at());
@@ -310,7 +453,7 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
             agendaObj.setHora_ag(at.getHorario());
             agendaObj.setTipo(at.getTipo_atendimento());
             if (AgendaC.CONTROL.create(agendaObj)) {
-            } else{
+            } else {
                 System.out.println("Vai tomar no cú!");
             }
         }
@@ -342,15 +485,75 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
          */
     }//GEN-LAST:event_btnSalvarActionPerformed
 
+    private void txtAgendaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAgendaFocusGained
+
+        txtCodigo.requestFocus();
+        new InsAgenda(null, true).setVisible(true);
+        txtCodigo.requestFocus();
+    }//GEN-LAST:event_txtAgendaFocusGained
+
+    private void txtCid10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCid10ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCid10ActionPerformed
+
+    private void txtCid10FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCid10FocusGained
+        // TODO add your handling code here:
+        // Requisita o foco no campo do Convenio
+        txtConvenio.requestFocus();
+
+        // Mostra popup de endereços
+        ci.setVisible(true);
+
+        // Pega a ID do endereço selecionado no popup
+        txtCid10.setText(String.valueOf(ci.idCid));
+
+        // Requisita o foco no campo do Convenio novamente (Garantia)
+        txtConvenio.requestFocus();
+
+
+    }//GEN-LAST:event_txtCid10FocusGained
+
+    private void txtAgendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAgendaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAgendaActionPerformed
+
+    private void cmbtpAtendimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbtpAtendimentoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbtpAtendimentoActionPerformed
+
+    private void txtCnsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCnsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCnsActionPerformed
+
+    private void cmbConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbConsultaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbConsultaActionPerformed
+
+    private void txtCodigoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCodigoFocusGained
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_txtCodigoFocusGained
+
+    private void txtCnsFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCnsFocusGained
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_txtCnsFocusGained
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSalvar;
     private javax.swing.JComboBox cmbBloco;
     private javax.swing.JComboBox cmbConsulta;
     private javax.swing.JComboBox cmbUbs;
+    private javax.swing.JComboBox cmbtpAtendimento;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAgenda;
     private javax.swing.JLabel lblBloco;
     private javax.swing.JLabel lblCodigo;
@@ -363,8 +566,12 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
     private javax.swing.JPanel panelComandos;
     private javax.swing.JPanel panelForm;
     private javax.swing.JTextField txtAgenda;
+    private javax.swing.JTextField txtCid10;
+    private javax.swing.JFormattedTextField txtCns;
     private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtConvenio;
     private javax.swing.JTextField txtNome;
+    private javax.swing.JTextArea txtObservacao;
     // End of variables declaration//GEN-END:variables
+
 }
