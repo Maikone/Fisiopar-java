@@ -4,6 +4,7 @@ import control.AgendaC;
 import control.AtendimentoC;
 import control.UbsC;
 import dao.PacienteDao;
+import java.awt.Color;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,6 +46,9 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         //ativarCadastro(false);
         getPaciente();
 
+        //verifica os registros no banco
+        status();
+
         // Loop que atualzia a cada 50 milisegundos
         timer.schedule(new TimerTask() {
             @Override
@@ -68,6 +72,28 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         txtConvenio.setText(pac.get(0).getConvenio());
         txtCns.setText(pac.get(0).getCns());
         txtObservacao.setText(pac.get(0).getObservacoes());
+
+    }
+
+    private void status() {
+        int pAtendimento = 3;
+        int contPatend = 0;
+
+        for (Atendimento atend : AtendimentoC.CONTROL.read()) {
+            if (atend.getFk_patendimento() == pAtendimento) {
+                contPatend++;
+            }
+        }
+
+        if (contPatend >= 10) {
+
+            btnSalvar.setEnabled(false);
+            btnSalvar.setBackground(Color.red);
+            btnSalvar.setText("FINALIZADO");
+        }
+
+        System.out.println("metodo iniciado");
+        System.out.println("quant : " + contPatend);
 
     }
 
@@ -106,6 +132,7 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         jLabel6 = new javax.swing.JLabel();
         cmbConsulta = new javax.swing.JComboBox();
         jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         lblTitle = new javax.swing.JLabel();
         panelComandos = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -121,6 +148,11 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         panelForm.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         txtNome.setEditable(false);
+        txtNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNomeActionPerformed(evt);
+            }
+        });
 
         txtCodigo.setEditable(false);
         txtCodigo.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -271,7 +303,11 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
                                 .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(39, 39, 39))))))
+                                .addGap(39, 39, 39))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(82, 82, 82))))))
         );
         panelFormLayout.setVerticalGroup(
             panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -318,14 +354,15 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                     .addComponent(txtCid10, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbtpAtendimento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelFormLayout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormLayout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)))
+                        .addGap(10, 10, 10))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
@@ -415,36 +452,33 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         at.setData_at(ag.getData_ag());
         at.setHorario(ag.getHora_ag());
         at.setFk_medico(1); // TO DO
-        at.setFk_patendimento(1); // TO DO
+        at.setFk_patendimento(3); // TO DO
         at.setFk_ubs(cmbUbs.getSelectedIndex() + 1);
-        at.setObservacoes("00");
+        at.setObservacoes(txtObservacao.getText());
         at.setTipo_atendimento(cmbConsulta.getSelectedItem().toString());
         at.setObservacoes(txtObservacao.getText());
         at.setFk_cid10(ci.idCid);
-        
-        int n = 3;
-        int j = 0;
-        
+
+        int pAtendimento = 3;
+        int contPatend = 0;
         if (cmbtpAtendimento.getSelectedIndex() == 1) {
 
+            //contando pre atendimentos
             for (Atendimento atend : AtendimentoC.CONTROL.read()) {
-                if (atend.getFk_patendimento() == n) {
-                    j++;
+                if (atend.getFk_patendimento() == pAtendimento) {
+                    contPatend++;
                 }
             }
-           
-            at.setNum_sessao(j);
-        
-            
 
-        } else if ( AtendimentoC.CONTROL.read().get(n).getNum_sessao() == 1) {
-            
-        }
-{
-            System.out.println("tt");
-            // set consulta
+            if (contPatend > 1) {
+                int soma = contPatend + 1;
+                at.setNum_sessao(soma);
+            } else {
+                at.setNum_sessao(contPatend);
+            }
         }
 
+        //caso situacao for finalizado  ocultar botao salvar
         if (AtendimentoC.CONTROL.create(at)) {
             Agenda agendaObj = new Agenda();
             agendaObj.setData_ag(at.getData_at());
@@ -457,6 +491,7 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                 System.out.println("Vai tomar no cú!");
             }
         }
+        status();
 
         /*
          agendaReal = (Agenda) Yagami.YG.getPublicObject();
@@ -539,6 +574,10 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_txtCnsFocusGained
 
+    private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNomeActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSalvar;
@@ -553,6 +592,7 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAgenda;
     private javax.swing.JLabel lblBloco;
