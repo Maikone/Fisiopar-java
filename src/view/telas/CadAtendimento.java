@@ -74,11 +74,10 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         txtObservacao.setText(pac.get(0).getObservacoes());
 
     }
-    private int pAtendimento = 3; //id pre atendimento q é referente ao paciente substituir posteriormente o valor predefinido
+    private int pAtendimento = 1; //id pre atendimento q é referente ao paciente substituir posteriormente o valor predefinido
     private int contPatend = 0; //quantidade de sessoes ja feitas pelo um unico paciente
 
     private void status() {
-        //int num = 3; //id que sera do paciente
         String numFK = Integer.toString(pAtendimento);
 
         int statusAtendimento = 0;
@@ -88,7 +87,7 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
             statusAtendimento = stats.getStatus();
 
         }
-        //pesquisa com a  fk pre atendimento para verificar é maior q 1   "sessao <= 0 == consulta"
+        //pesquisa com a  fk pre atendimento para verificar é maior q 1  o tipo de sesaao "sessao <= 0 == consulta"
         for (Atendimento stats : AtendimentoC.CONTROL.read(true, "1")) {
             tipoSessao = stats.getStatus();
             System.out.println("status do di 1.......................:" + stats.getNum_sessao());
