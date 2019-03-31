@@ -64,6 +64,7 @@ public class AtendimentoDao {
                 atendimento.setFk_ubs(rset.getInt("fk_ubs"));
                 atendimento.setFk_cid10(rset.getString("fk_cid10"));
                 atendimento.setNum_sessao(rset.getInt("num_sessao"));
+                atendimento.setStatus(rset.getInt("status"));
                 
                 //....
                 
@@ -130,6 +131,7 @@ public class AtendimentoDao {
                 atendimento.setFk_ubs(rset.getInt("fk_ubs"));
                 atendimento.setFk_cid10(rset.getString("fk_cid10"));
                 atendimento.setNum_sessao(rset.getInt("num_sessao"));
+                atendimento.setStatus(rset.getInt("status"));
                 //....
                 
                 //Adiciono o contato recuperado, a lista de contatos
@@ -170,8 +172,8 @@ public class AtendimentoDao {
         String sql = "INSERT INTO atendimento\n" +
         "(tipo_atendimento, fk_medico,\n" +
         "bloco_inicial, bloco_atual, horario, data_at,\n" +
-        "observacoes, fk_patendimento, fk_ubs, fk_cid10, num_sessao)\n" +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        "observacoes, fk_patendimento, fk_ubs, fk_cid10, num_sessao, status)\n" +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
 
         Connection conn = null;
         PreparedStatement pstm = null;
@@ -195,6 +197,70 @@ public class AtendimentoDao {
             pstm.setInt   (9,  atendimento.getFk_ubs());
             pstm.setString(10,  atendimento.getFk_cid10());
             pstm.setInt   (11,  atendimento.getNum_sessao());
+            pstm.setInt   (12,  atendimento.getStatus());
+            
+
+            //Executa a sql para inserção dos dados
+            pstm.execute();
+
+        } catch (Exception e) {
+            Yagami.mensagemErro(e);
+            retorno = false;
+        
+        } finally {
+            //Fecha as conexões
+            try{
+                if(pstm != null){
+                    pstm.close();
+                }
+                if(conn != null){
+                    conn.close();
+                }
+
+            } catch(SQLException e){
+                Yagami.mensagemErro(e);
+                retorno = false;
+            }           
+        }
+        return retorno;
+    }
+    
+    public boolean update(Atendimento atendimento) {
+        boolean retorno = true;
+        /*
+        * Isso é uma sql comum, os ? são os parâmetros que nós vamos adicionar
+        * na base de dados
+        */
+       // , data_nasc = ?, sexo = ?, cpf = ?, rg = ?, est_civ = ?,
+         String sql = "UPDATE atendimento\n" +
+        "SET status = ?\n" +
+       // "etnia = ?, nome_resp = ?, nome_mae = ?, tel_prim = ?,\n" +
+       // "tel_sec = ?, email = ?, fk_endereco = ?, convenio = ?, cns = ?,\n" +
+       // "valid_cart = ?, dat_hr = ?, observacoes = ?\n" +
+        "WHERE fk_patendimento = ?";
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+
+        try {
+            //Cria uma conexão com o banco
+            conn = MysqlConn.createConnectionToMySQL();
+
+            //Cria um PreparedStatment, classe usada para executar a query
+            pstm = conn.prepareStatement(sql);
+
+            //Adiciona o valor do primeiro parâmetro da sql
+            pstm.setInt(1,  atendimento.getStatus());
+           /* pstm.setInt   (2,  atendimento.getFk_medico());
+            pstm.setString(3,  atendimento.getBloco_inicial());
+            pstm.setString(4,  atendimento.getBloco_atual());
+            pstm.setTime  (5,  atendimento.getHorario());
+            pstm.setDate  (6,  atendimento.getData_at());
+            pstm.setString(7,  atendimento.getObservacoes());
+            pstm.setInt   (8,  atendimento.getFk_patendimento());
+            pstm.setInt   (9,  atendimento.getFk_ubs());
+            pstm.setString(10,  atendimento.getFk_cid10());*/
+            pstm.setInt   (2,  atendimento.getFk_patendimento());
 
             //Executa a sql para inserção dos dados
             pstm.execute();
@@ -221,7 +287,7 @@ public class AtendimentoDao {
         return retorno;
     }
 
-    public boolean alterar(Paciente paciente) {
+    public boolean alterar(Atendimento atendimento) {
         boolean retorno = true;
         /*
         * Isso é uma sql comum, os ? são os parâmetros que nós vamos adicionar
@@ -245,25 +311,17 @@ public class AtendimentoDao {
             pstm = conn.prepareStatement(sql);
 
             //Adiciona o valor do primeiro parâmetro da sql
-            pstm.setString(1,  paciente.getNome());
-            pstm.setDate  (2,  paciente.getData_nasc());
-            pstm.setString(3,  paciente.getSexo());
-            pstm.setString(4,  paciente.getCpf());
-            pstm.setString(5,  paciente.getRg());
-            pstm.setString(6,  paciente.getEst_civ());
-            pstm.setString(7,  paciente.getEtnia());
-            pstm.setString(8,  paciente.getNome_resp());
-            pstm.setString(9,  paciente.getNome_mae());
-            pstm.setString(10, paciente.getTel_prim());
-            pstm.setString(11, paciente.getTel_sec());
-            pstm.setString(12, paciente.getEmail());
-            pstm.setInt   (13, paciente.getFk_endereco());
-            pstm.setString(14, paciente.getConvenio());
-            pstm.setString(15, paciente.getCns());
-            pstm.setDate  (16, paciente.getValid_cart());
-            pstm.setString(17, LocalDateTime.now().toString());
-            pstm.setString(18, paciente.getObservacoes());
-            pstm.setInt   (19, paciente.getId());
+            pstm.setString(1,  atendimento.getTipo_atendimento());
+            pstm.setInt   (2,  atendimento.getFk_medico());
+            pstm.setString(3,  atendimento.getBloco_inicial());
+            pstm.setString(4,  atendimento.getBloco_atual());
+            pstm.setTime  (5,  atendimento.getHorario());
+            pstm.setDate  (6,  atendimento.getData_at());
+            pstm.setString(7,  atendimento.getObservacoes());
+            pstm.setInt   (8,  atendimento.getFk_patendimento());
+            pstm.setInt   (9,  atendimento.getFk_ubs());
+            pstm.setString(10,  atendimento.getFk_cid10());
+            pstm.setInt   (11,  atendimento.getNum_sessao());
 
             //Executa a sql para inserção dos dados
             pstm.execute();

@@ -74,26 +74,37 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         txtObservacao.setText(pac.get(0).getObservacoes());
 
     }
+    private int pAtendimento = 3; //id pre atendimento q é referente ao paciente substituir posteriormente o valor predefinido
+    private int contPatend = 0; //quantidade de sessoes ja feitas pelo um unico paciente
 
     private void status() {
-        int pAtendimento = 3;
-        int contPatend = 0;
+        //int num = 3; //id que sera do paciente
+        String numFK = Integer.toString(pAtendimento);
 
-        for (Atendimento atend : AtendimentoC.CONTROL.read()) {
+        int statusAtendimento = 0;
+
+        for (Atendimento stats : AtendimentoC.CONTROL.read(true, numFK)) {
+            statusAtendimento = stats.getStatus();
+        }
+
+        for (Atendimento atend : AtendimentoC.CONTROL.read(false, null)) {
             if (atend.getFk_patendimento() == pAtendimento) {
                 contPatend++;
             }
         }
-
-        if (contPatend >= 10) {
-
+        
+        if (contPatend >= 10 /*| statusAtendimento ==  ou se o paciente atual estiver finalizado */) {
+                        
             btnSalvar.setEnabled(false);
             btnSalvar.setBackground(Color.red);
             btnSalvar.setText("FINALIZADO");
+            btnFinalizar.setVisible(false);
         }
 
+        
+        System.out.println("quantidade de sessoes referente ao id do pré atedimento 3...:" + statusAtendimento);
         System.out.println("metodo iniciado");
-        System.out.println("quant : " + contPatend);
+        System.out.println("quantidade total de um unico paciente : " + contPatend);
 
     }
 
@@ -138,6 +149,7 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        btnFinalizar = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -407,6 +419,13 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                 .addContainerGap(258, Short.MAX_VALUE))
         );
 
+        btnFinalizar.setText("Finalizar");
+        btnFinalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFinalizarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -417,7 +436,9 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                         .addContainerGap()
                         .addComponent(panelForm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(panelComandos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(panelComandos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnFinalizar, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(32, 32, 32)
                         .addComponent(lblTitle)))
@@ -432,10 +453,12 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(panelForm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(57, Short.MAX_VALUE))
+                        .addContainerGap(60, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(panelComandos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnFinalizar)
+                        .addGap(112, 112, 112))))
         );
 
         pack();
@@ -459,16 +482,7 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         at.setObservacoes(txtObservacao.getText());
         at.setFk_cid10(ci.idCid);
 
-        int pAtendimento = 3;
-        int contPatend = 0;
         if (cmbtpAtendimento.getSelectedIndex() == 1) {
-
-            //contando pre atendimentos
-            for (Atendimento atend : AtendimentoC.CONTROL.read()) {
-                if (atend.getFk_patendimento() == pAtendimento) {
-                    contPatend++;
-                }
-            }
 
             if (contPatend > 1) {
                 int soma = contPatend + 1;
@@ -491,7 +505,22 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
                 System.out.println("Vai tomar no cú!");
             }
         }
+        pAtendimento = 0;
         status();
+        
+        if (contPatend >= 9 /*| statusAtendimento ==  ou se o paciente atual estiver finalizado */) {
+
+                        
+            btnSalvar.setEnabled(false);
+            btnSalvar.setBackground(Color.red);
+            btnSalvar.setText("FINALIZADO");
+            btnFinalizar.setVisible(false);
+            
+            Atendimento att = new Atendimento();
+            att.setFk_patendimento(pAtendimento);
+            att.setStatus(1);
+            AtendimentoC.CONTROL.update(att);
+        }
 
         /*
          agendaReal = (Agenda) Yagami.YG.getPublicObject();
@@ -578,8 +607,17 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNomeActionPerformed
 
+    private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
+        // TODO add your handling code here:
+        Atendimento at = new Atendimento();
+        at.setFk_patendimento(pAtendimento);
+        at.setStatus(1);
+        AtendimentoC.CONTROL.update(at);
+    }//GEN-LAST:event_btnFinalizarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnFinalizar;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JComboBox cmbBloco;
     private javax.swing.JComboBox cmbConsulta;

@@ -20,6 +20,7 @@ public class Atendimento {
     private int fk_ubs;
     private String fk_cid10;
     private int num_sessao;
+    private int status;
 
     public int getId_atendimento() {
         return id_atendimento;
@@ -115,6 +116,14 @@ public class Atendimento {
 
     public void setNum_sessao(int num_sessao) {
         this.num_sessao = num_sessao;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
    
