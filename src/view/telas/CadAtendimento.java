@@ -78,22 +78,22 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
     private int contPatend = 0; //quantidade de sessoes ja feitas pelo um unico paciente
 
     private void status() {
-        String numFK = Integer.toString(pAtendimento);
+        String numPac = Integer.toString(pAtendimento);
 
         int statusAtendimento = 0;
         int tipoSessao = 0;
         //pesquisa com a  fk pre atendimento
-        for (Atendimento stats : AtendimentoC.CONTROL.read(true, numFK)) {
+        for (Atendimento stats : AtendimentoC.CONTROL.read(true, numPac)) {
             statusAtendimento = stats.getStatus();
 
         }
         //pesquisa com a  fk pre atendimento para verificar é maior q 1  o tipo de sesaao "sessao <= 0 == consulta"
         for (Atendimento stats : AtendimentoC.CONTROL.read(true, "1")) {
             tipoSessao = stats.getStatus();
-            System.out.println("status do di 1.......................:" + stats.getNum_sessao());
+            System.out.println("status do id 1.......................:" + stats.getStatus());
         }
 
-        for (Atendimento atend : AtendimentoC.CONTROL.read(false, null)) {
+        for (Atendimento atend : AtendimentoC.CONTROL.readCustom(true, numPac)) {
             if (atend.getFk_patendimento() == pAtendimento) {
                 contPatend++;
             }
@@ -111,9 +111,9 @@ public class CadAtendimento extends javax.swing.JInternalFrame {
 
         }
 
-        System.out.println("quantidade de sessoes referente ao id do pré atedimento 3...:" + statusAtendimento);
+        System.out.println("status do atendimento...:" + statusAtendimento);
         System.out.println("metodo iniciado");
-        System.out.println("quantidade total de um unico paciente : " + contPatend);
+        System.out.println("quantidade total de sessoes de  um unico paciente : " + contPatend);
         
          
 
@@ -491,7 +491,7 @@ private void finaliza() {
         at.setData_at(ag.getData_ag());
         at.setHorario(ag.getHora_ag());
         at.setFk_medico(1); // TO DO
-        at.setFk_patendimento(pAtendimento); // TO DO
+        at.setFk_patendimento(1); // TO DO
         at.setFk_ubs(cmbUbs.getSelectedIndex() + 1);
         at.setObservacoes(txtObservacao.getText());
         at.setTipo_atendimento(cmbConsulta.getSelectedItem().toString());
@@ -500,7 +500,7 @@ private void finaliza() {
 
         if (cmbtpAtendimento.getSelectedIndex() == 1) {
 
-            if (contPatend > 1) {
+            if (contPatend >= 1) {
                 int soma = contPatend + 1;
                 at.setNum_sessao(soma);
             } else {
@@ -522,25 +522,25 @@ private void finaliza() {
             }
         }
 
-        if (contPatend >= 9 /*| statusAtendimento ==  ou se o paciente atual estiver finalizado */) {
+        if (contPatend >=  9 ) {
 
             finaliza();
             btnSalvar.setEnabled(false);
             btnSalvar.setBackground(Color.red);
             btnSalvar.setText("FINALIZADO");
-            btnFinalizar.setVisible(false);
-
-           try {
+            btnFinalizar.setVisible(false); 
+            
+        }
+        try {
                 Thread.sleep(500);                
-                pAtendimento = 0;
+                contPatend = 0;
                 status();
 
             } catch (Exception e) {
+                System.out.println("Errou no timer");
             }
-
-            
-            
-        }
+        
+        
 
         /*
          agendaReal = (Agenda) Yagami.YG.getPublicObject();
